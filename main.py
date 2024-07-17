@@ -1,21 +1,26 @@
+def get_todos(filepath):
+    with open(filepath, "r") as file_local:
+        todos_local = file_local.readlines()
+    return todos_local
+
+
+def write_todos(filepath, todos_arg):
+    with open(filepath, "w") as file_local:
+        file_local.writelines(todos_arg)
+
+
 while True:
     user_action = input("Type add, show, edit, complete or exit: ")
     user_action = user_action.strip()
 
     if user_action.startswith("add"):
         todo = user_action[4:]
-
-        with open("todos.txt", "r") as file:
-            todos = file.readlines()
-
+        todos = get_todos("todos.txt")
         todos.append(todo + '\n')
-
-        with open("todos.txt", "w") as file:
-            file.writelines(todos)
+        write_todos("todos.txt", todos)
 
     elif user_action.startswith("show"):
-        with open("todos.txt", "r") as file:
-            todos = file.readlines()
+        todos = get_todos("todos.txt")
 
         for index, todo in enumerate(todos):
             print(f"{index + 1}-{todo}".rstrip())
@@ -24,15 +29,10 @@ while True:
         try:
             number = int(user_action[5:])
             number = number - 1
-
-            with open("todos.txt", "r") as file:
-                todos = file.readlines()
-
+            todos = get_todos("todos.txt")
             new_todo = input("Enter a new todo: ")
             todos[number] = new_todo + "\n"
-
-            with open("todos.txt", "w") as file:
-                file.writelines(todos)
+            write_todos("todos.txt", todos)
         except ValueError:
             print("Your command is not valid.")
             continue
@@ -40,15 +40,9 @@ while True:
     elif user_action.startswith("complete"):
         try:
             number = int(user_action[9:])
-
-            with open("todos.txt", "r") as file:
-                todos = file.readlines()
-
+            todos = get_todos("todos.txt")
             todo_to_remove = todos.pop(number - 1)
-
-            with open("todos.txt", "w") as file:
-                file.writelines(todos)
-
+            write_todos("todos.txt", todos)
             message = f"Todo {todo_to_remove.rstrip()} was removed from the list"
 
             print(message)
